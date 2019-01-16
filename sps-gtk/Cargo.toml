@@ -1,0 +1,7 @@
+[package]
+name = "sps-gtk"
+version = "0.1.0"
+authors = ["mathias.magnusson"]
+edition = "2018"
+
+[dependencies]
