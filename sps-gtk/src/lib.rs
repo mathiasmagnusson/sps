@@ -51,6 +51,33 @@ impl Store {
 			None
 		}
 	}
+	fn dist_between_items(&self, a: ItemId, b: ItemId) -> u32 {
+		let pos1 = self
+			.get_pos_of_item(a)
+			.expect("This store misses some item in your shopping list");
+		let pos2 = self
+			.get_pos_of_item(b)
+			.expect("This store misses some item in your shopping list");
+
+		((pos1.col as i64 - pos2.col as i64).abs() + (pos1.row as i64 - pos2.row as i64).abs())
+			as u32
+	}
+	fn dist_from_entrance(&self, id: ItemId) -> u32 {
+		let pos = self
+			.get_pos_of_item(id)
+			.expect("This store misses some item in your shopping list");
+
+		((self.entrance.col as i64 - pos.col as i64).abs()
+			+ (self.entrance.row as i64 - pos.row as i64).abs()) as u32
+	}
+	fn dist_to_checkout(&self, id: ItemId) -> u32 {
+		let pos = self
+			.get_pos_of_item(id)
+			.expect("This store misses some item in your shopping list");
+
+		((self.checkout.col as i64 - pos.col as i64).abs()
+			+ (self.checkout.row as i64 - pos.row as i64).abs()) as u32
+	}
 }
 
 #[derive(Debug)]
@@ -61,7 +88,10 @@ pub struct Shoplist {
 
 impl Shoplist {
 	pub fn new(items: Vec<Item>) -> Self {
-		Self { items, walking_length: None }
+		Self {
+			items,
+			walking_length: None,
+		}
 	}
 	pub fn reorder_path(&mut self, store: Store) {
 		let mut perms = Vec::new();
@@ -70,36 +100,13 @@ impl Shoplist {
 
 		let mut shortest_perm = (vec![], u32::MAX);
 		for perm in perms {
-			let length: u32 = {
-				let item = store
-					.get_pos_of_item(perm[0].id())
-					.expect("This store misses some item in your shopping list");
-
-				((store.entrance.col as i64 - item.col as i64).abs()
-					+ (store.entrance.row as i64 - item.row as i64).abs()) as u32
-			} + perm
-				.iter()
-				.zip(perm.iter().skip(1))
-				.map(|(item1, item2)| {
-					let pos1 = store
-						.get_pos_of_item(item1.id())
-						.expect("This store misses some item in your shopping list");
-					let pos2 = store
-						.get_pos_of_item(item2.id())
-						.expect("This store misses some item in your shopping list");
-
-					((pos1.col as i64 - pos2.col as i64).abs()
-						+ (pos1.row as i64 - pos2.row as i64).abs()) as u32
-				})
-				.sum::<u32>()
-				+ {
-					let item = store
-						.get_pos_of_item(perm[perm.len() - 1].id())
-						.expect("This store misses some item in your shopping list");
-
-					((store.checkout.col as i64 - item.col as i64).abs()
-						+ (store.checkout.row as i64 - item.row as i64).abs()) as u32
-				};
+			let length: u32 = store.dist_from_entrance(perm[0].id())
+				+ perm
+					.iter()
+					.zip(perm.iter().skip(1))
+					.map(|(item1, item2)| store.dist_between_items(item1.id(), item2.id()))
+					.sum::<u32>()
+				+ store.dist_to_checkout(perm[perm.len() - 1].id());
 			if length < shortest_perm.1 {
 				shortest_perm = (perm, length);
 			}
