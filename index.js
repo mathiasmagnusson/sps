@@ -117,9 +117,39 @@ class Store {
 	}
 }
 
-let shoplist = [];
+class ShoppingList {
+	constructor() {
+		this.items = [
+			"7780721820430",
+			"8850749311446",
+			"640509040147",
+		];
+		this.path = null;
+	}
+	reorder_to_fastest_path_in_store(store) {
+		let perms = lib.all_permutations(this.items);
+
+		let shortest_perm = { value: [], length: Infinity };
+		for (let perm of perms) {
+			let paths = [store.path_from_entrance_to_item(perm[0])];
+			for (let i = 0; i < perm.length - 1; i++) {
+				paths.push(store.path_between_items(perm[i], perm[i + 1]));
+			}
+			paths.push(store.path_from_item_to_checkout(perm[perm.length - 1]));
+
+			let length = paths.reduce((acc, { length }) => acc + length);
+			if (length < shortest_perm.length) {
+				shortest_perm.length = length;
+				shortest_perm.value = paths;
+			}
+		}
+
+		this.path = shortest_perm;
+	}
+}
 
 let store = new Store();
+let shopping_list = new ShoppingList();
 
 const lib = {
 	index_of_fn: function(list, predicate) {
@@ -129,5 +159,23 @@ const lib = {
 			}
 		}
 		return -1;
+	},
+	all_permutations: function(list) {
+		function inner(s, r, p) {
+			if (r.length == 0) {
+				p.push(s);
+			} else {
+				for (let [i, v] of Object.entries(r)) {
+					let w = r.slice(0); // clone
+					w.splice(i, 1);
+					let sn = s.slice(0);
+					sn.push(v);
+					inner(sn, w, p);
+				}
+			}
+		}
+		let p = [];
+		inner([], list, p);
+		return p;
 	}
 };
