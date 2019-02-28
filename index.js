@@ -11,7 +11,13 @@ class Store {
 			{ items: [new Item("Absolut Vodka", "8850749311446")], },
 			{ items: [], },
 			{ items: [new Item("Mjölk", "7780721820430"), new Item("Fil", "640509040147")], },
-			{ items: [], }
+			{ items: [], },
+			// Att spara positionen av entrén och kassan
+			// såhär är inte väldigt effektivt, men det
+			// blir lättare att implementera affärer som
+			// har flera kassor om jag börjar såhär
+			{ entrance: true, },
+			{ checkout: true, },
 		];
 		this.edges = [
 			[
@@ -19,16 +25,24 @@ class Store {
 			],
 			[
 				{ weight: 3, dest: 0, },
-				{ weight: 7, dest: 2, },
+				{ weight: 2, dest: 2, },
 				{ weight: 1, dest: 3, },
+				{ weight: 2, dest: 4, },
 			],
 			[
-				{ weight: 7, dest: 1 },
-				{ weight: 2, dest: 3, }
+				{ weight: 2, dest: 1, },
+				{ weight: 2, dest: 3, },
 			],
 			[
 				{ weight: 1, dest: 1, },
-				{ weight: 2, dest: 2, }
+				{ weight: 2, dest: 2, },
+				{ weight: 2, dest: 5, },
+			],
+			[
+				{ weight: 2, dest: 1, },
+			],
+			[
+				{ weight: 2, dest: 3, },
 			]
 		];
 	}
@@ -43,9 +57,24 @@ class Store {
 		return -1;
 	}
 	path_between_items(barcode1, barcode2) {
-		let src = this.find_item(barcode1);
-		let dst = this.find_item(barcode2);
-
+		return this.path_between_vertices(
+			this.find_item(barcode1),
+			this.find_item(barcode2),
+		);
+	}
+	path_from_entrance_to_item(barcode) {
+		return this.path_between_vertices(
+			lib.index_of_fn(this.verts, v => v.entrance),
+			this.find_item(barcode),
+		);
+	}
+	path_from_item_to_checkout(barcode) {
+		return this.path_between_vertices(
+			this.find_item(barcode),
+			lib.index_of_fn(this.verts, v => v.checkout),
+		)
+	}
+	path_between_vertices(src, dst) {
 		let dist = this.verts.map(() => Infinity);
 		let prev = this.verts.map(() => -1);
 		let nx = this.verts.map((_, i) => i);
@@ -53,9 +82,16 @@ class Store {
 		dist[src] = 0;
 
 		while (nx.length > 0) {
-			let u = dist.indexOf(Math.min(...nx.map(v => dist[v])));
+			let min = { value: Infinity, index: -1 };
+			for (let [i, v] of Object.entries(nx)) {
+				if (dist[v] < min.value) {
+					min.value = dist[v];
+					min.index = i;
+				}
+			}
 
-			nx.splice(nx.indexOf(u), 1);
+			let u = nx[min.index];
+			nx.splice(min.index, 1);
 
 			if (u == dst) {
 				let path = [];
@@ -84,3 +120,14 @@ class Store {
 let shoplist = [];
 
 let store = new Store();
+
+const lib = {
+	index_of_fn: function(list, predicate) {
+		for (let [index, value] of Object.entries(list)) {
+			if (predicate(value)) {
+				return index;
+			}
+		}
+		return -1;
+	}
+};
