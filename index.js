@@ -28,7 +28,7 @@ class Item {
 				}
 			}
 		}
-		throw `Item ${p} not found.`;
+		throw `Item "${p}" not found.`;
 	}
 }
 
@@ -155,6 +155,17 @@ class ShoppingList {
 		this.items.push(item);
 		this.update();
 	}
+	emplace_item(s) {
+		try {
+			this.items.push(new Item(s));
+			this.update();
+			return true;
+		}
+		catch(e) {
+			alert(e);
+			return false;
+		}
+	}
 	remove(item) {
 		this.items.splice(this.items.indexOf(item), 1);
 		this.update();
@@ -238,3 +249,45 @@ const lib = {
 		return p;
 	}
 };
+
+let add_item_btn = document.getElementById('add-item-btn');
+let add_item_itx = document.getElementById('add-item-itx');
+add_item_itx.is_shown = false;
+
+add_item_btn.addEventListener('click', function() {
+	if (add_item_itx.is_shown) {
+		if (!add_item_itx.value == "") {
+			if (shopping_list.emplace_item(add_item_itx.value)) {
+				add_item_itx.value = "";
+				add_item_itx.is_shown = false;
+				add_item_itx.style.display = "none";
+			}
+		}
+		else {
+			add_item_itx.is_shown = false;
+			add_item_itx.style.display = "none";
+		}
+	}
+	else {
+		setTimeout(() => add_item_itx.focus(), 10);
+		add_item_itx.is_shown = true;
+		add_item_itx.style.display = "block";
+	}
+});
+
+window.addEventListener('keydown', ({ key }) => {
+	if (key != "Enter") return;
+
+	if (add_item_itx.is_shown) {
+		if (!add_item_itx.value == "") {
+			shopping_list.emplace_item(add_item_itx.value);
+			add_item_itx.value = "";
+		}
+		add_item_itx.style.display = "none";
+		add_item_itx.is_shown = false;
+	} else {
+		add_item_itx.is_shown = true;
+		add_item_itx.style.display = "block";
+		setTimeout(() => add_item_itx.focus(), 10);
+	}
+})

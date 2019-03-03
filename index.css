@@ -18,10 +18,36 @@
 	grid-area: shoplist;
 	padding: 20px;
 	font-family: 'Segoe UI SemiLight';
+	background-color: #eee;
+}
+
+#shoplist-wrapper div {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
 }
 
 #shoplist-wrapper h2 {
 	text-align: center;
+}
+
+#add-item-btn {
+	width: 30px;
+	height: 30px;
+	background-color: #ddd;
+	border: none;
+	color: black;
+	font-size: 18px;
+	border-radius: 10px;
+	position: relative;
+	top: 3px;
+}
+
+#add-item-itx {
+	display: none;
+	margin: 10px 0;
+	font-size: 20px;
+	width: 100%;
 }
 
 canvas {
