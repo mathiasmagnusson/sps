@@ -1,80 +1,82 @@
+const name_of_item = {
+	"8850749311446": "Absolut Vodka",
+	"7780721820430": "Mjölk",
+	"6405090401472": "Fil",
+	"7340116870009": "Aloe Vera Original",
+	"1234567890123": "Exempelvara 1",
+	"1234554390123": "Exempelvara 2",
+	"1234567890113": "Exempelvara 3",
+	"1234574230123": "Exempelvara 4",
+};
+
 class Item {
-	constructor(name, barcode) {
-		this.name = name;
-		this.barcode = barcode;
+	constructor(p) {
+		if (typeof p == "string" && p.split('').every(c => /\d/.test(c)) && name_of_item[p]) {
+			this.name = name_of_item[p];
+			this.barcode = p;
+			return;
+		} else if (typeof p == "number" && name_of_item[p.toString()]) {
+			this.name = name_of_item[p];
+			this.barcode = p.toString();
+			return;
+		} else {
+			for (let [barcode, name] of Object.entries(name_of_item)) {
+				if (p == name) {
+					this.name = name;
+					this.barcode = barcode;
+					return;
+				}
+			}
+		}
+		throw `Item ${p} not found.`;
 	}
 }
 
 class Store {
-	constructor() {
-		this.verts = [
-			{ items: [new Item("Absolut Vodka", "8850749311446")], },
-			{ items: [], },
-			{ items: [new Item("Mjölk", "7780721820430"), new Item("Fil", "640509040147")], },
-			{ items: [], },
-			// Att spara positionen av entrén och kassan
-			// såhär är inte väldigt effektivt, men det
-			// blir lättare att implementera affärer som
-			// har flera kassor om jag börjar såhär
-			{ entrance: true, },
-			{ checkout: true, },
-		];
-		this.edges = [
-			[
-				{ weight: 3, dest: 1, },
-			],
-			[
-				{ weight: 3, dest: 0, },
-				{ weight: 2, dest: 2, },
-				{ weight: 1, dest: 3, },
-				{ weight: 2, dest: 4, },
-			],
-			[
-				{ weight: 2, dest: 1, },
-				{ weight: 2, dest: 3, },
-			],
-			[
-				{ weight: 1, dest: 1, },
-				{ weight: 2, dest: 2, },
-				{ weight: 2, dest: 5, },
-			],
-			[
-				{ weight: 2, dest: 1, },
-			],
-			[
-				{ weight: 2, dest: 3, },
-			]
-		];
+	constructor(json) {
+		json = JSON.parse(json);
+		this.verts = json.verts.map(vert => {
+			if (vert.items)
+				vert.items = vert.items.map(barcode => new Item(barcode));
+
+			return vert;
+		});
+		this.edges = json.edges;
 	}
-	find_item(barcode) {
+	find_item(item) {
 		for (let [i, v] of Object.entries(this.verts)) {
-			for (let item of v.items) {
-				if (item.barcode == barcode) {
-					return i;
+			if (v.items) {
+				for (let item_ of v.items) {
+					if (item.barcode == item_.barcode) {
+						return i;
+					}
 				}
 			}
 		}
 		return -1;
 	}
-	path_between_items(barcode1, barcode2) {
+	path_between_items(item1, item2) {
 		return this.path_between_vertices(
-			this.find_item(barcode1),
-			this.find_item(barcode2),
+			this.find_item(item1),
+			this.find_item(item2),
 		);
 	}
-	path_from_entrance_to_item(barcode) {
+	path_from_entrance_to_item(item) {
 		return this.path_between_vertices(
 			lib.index_of_fn(this.verts, v => v.entrance),
-			this.find_item(barcode),
+			this.find_item(item),
 		);
 	}
-	path_from_item_to_checkout(barcode) {
+	path_from_item_to_checkout(item) {
 		return this.path_between_vertices(
-			this.find_item(barcode),
+			this.find_item(item),
 			lib.index_of_fn(this.verts, v => v.checkout),
 		)
 	}
 	path_between_vertices(src, dst) {
+		if (src == -1 || dst == -1)
+			throw "Undefined src or dst";
+
 		let dist = this.verts.map(() => Infinity);
 		let prev = this.verts.map(() => -1);
 		let nx = this.verts.map((_, i) => i);
@@ -113,20 +115,20 @@ class Store {
 			}
 		}
 
-		console.error("rip in peperonis, this is awful");
+		throw "rip in peperonis, this is awful";
 	}
 }
 
 class ShoppingList {
 	constructor() {
-		this.items = [
-			"7780721820430",
-			"8850749311446",
-			"640509040147",
-		];
+		this.items = [];
 		this.path = null;
+		this.ul = document.querySelector("#shoplist");
 	}
-	reorder_to_fastest_path_in_store(store) {
+	get_fastest_path_in_store(store) {
+		if (this.items.length == 0)
+			throw "Yer already done m8, shopping list empty";
+
 		let perms = lib.all_permutations(this.items);
 
 		let shortest_perm = { value: [], length: Infinity };
@@ -136,19 +138,76 @@ class ShoppingList {
 				paths.push(store.path_between_items(perm[i], perm[i + 1]));
 			}
 			paths.push(store.path_from_item_to_checkout(perm[perm.length - 1]));
-
-			let length = paths.reduce((acc, { length }) => acc + length);
+			
+			let length = paths.map(({ length }) => length).reduce((acc, length) => acc + length);
 			if (length < shortest_perm.length) {
 				shortest_perm.length = length;
 				shortest_perm.value = paths;
 			}
 		}
 
-		this.path = shortest_perm;
+		return (this.path = shortest_perm);
+	}
+	add(item) {
+		if (!item instanceof Item)
+			throw "You can only add items to your shopping list, m8";
+
+		this.items.push(item);
+		this.update();
+	}
+	remove(item) {
+		this.items.splice(this.items.indexOf(item), 1);
+		this.update();
+	}
+	update() {
+		let ul = this.ul;
+		ul.innerHTML = "";
+		for (let item of this.items) {
+			let li = document.createElement("li");
+			li.textContent = item.name;
+			li.setAttribute("barcode", item.barcode);
+			ul.appendChild(li);
+		}
 	}
 }
 
-let store = new Store();
+let store = new Store(`{
+	"verts": [
+		{ "items": ["8850749311446"] },
+		{},
+		{ "items": ["7780721820430", "6405090401472"] },
+		{},
+		{ "entrance": true },
+		{ "checkout": true }
+	],
+	"edges": [
+		[
+			{ "weight": 3, "dest": 1 }
+		],
+		[
+			{ "weight": 3, "dest": 0 },
+			{ "weight": 2, "dest": 2 },
+			{ "weight": 1, "dest": 3 },
+			{ "weight": 2, "dest": 4 }
+		],
+		[
+			{ "weight": 2, "dest": 1 },
+			{ "weight": 2, "dest": 3 }
+		],
+		[
+			{ "weight": 1, "dest": 1 },
+			{ "weight": 2, "dest": 2 },
+			{ "weight": 2, "dest": 5 }
+		],
+		[
+			{ "weight": 2, "dest": 1 }
+		],
+		[
+			{ "weight": 2, "dest": 3 }
+		]
+	]
+}`);
+
 let shopping_list = new ShoppingList();
 
 const lib = {
