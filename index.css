@@ -14,13 +14,13 @@
 	;
 }
 
-#shoplist {
+#shoplist-wrapper {
 	grid-area: shoplist;
 	padding: 20px;
 	font-family: 'Segoe UI SemiLight';
 }
 
-#shoplist h2 {
+#shoplist-wrapper h2 {
 	text-align: center;
 }
 
