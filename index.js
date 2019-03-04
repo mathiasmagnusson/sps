@@ -113,7 +113,7 @@ class Store {
 			}
 		}
 
-		throw "rip in peperonis, this is awful";
+		throw "rip in peperonis, no path found";
 	}
 }
 
@@ -218,35 +218,6 @@ let store = new Store(`{
 
 let shopping_list = new ShoppingList();
 
-const lib = {
-	index_of_fn: function(list, predicate) {
-		for (let [index, value] of Object.entries(list)) {
-			if (predicate(value)) {
-				return index;
-			}
-		}
-		return -1;
-	},
-	all_permutations: function(list) {
-		function inner(s, r, p) {
-			if (r.length == 0) {
-				p.push(s);
-			} else {
-				for (let [i, v] of Object.entries(r)) {
-					let w = r.slice(0); // clone
-					w.splice(i, 1);
-					let sn = s.slice(0);
-					sn.push(v);
-					inner(sn, w, p);
-				}
-			}
-		}
-		let p = [];
-		inner([], list, p);
-		return p;
-	}
-};
-
 let add_item_btn = document.getElementById('add-item-btn');
 let add_item_itx = document.getElementById('add-item-itx');
 add_item_itx.is_shown = false;
@@ -287,4 +258,33 @@ window.addEventListener('keydown', ({ key }) => {
 		add_item_itx.style.display = "block";
 		setTimeout(() => add_item_itx.focus(), 10);
 	}
-})
+});
+
+const lib = {
+	index_of_fn: function(list, predicate) {
+		for (let [index, value] of Object.entries(list)) {
+			if (predicate(value)) {
+				return index;
+			}
+		}
+		return -1;
+	},
+	all_permutations: function(list) {
+		function inner(s, r, p) {
+			if (r.length == 0) {
+				p.push(s);
+			} else {
+				for (let [i, v] of Object.entries(r)) {
+					let w = r.slice(0); // clone
+					w.splice(i, 1);
+					let sn = s.slice(0);
+					sn.push(v);
+					inner(sn, w, p);
+				}
+			}
+		}
+		let p = [];
+		inner([], list, p);
+		return p;
+	}
+};
