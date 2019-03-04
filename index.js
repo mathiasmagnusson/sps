@@ -40,6 +40,7 @@ class Store {
 			return vert;
 		});
 		this.edges = json.edges;
+		this.gfx = json.gfx;
 	}
 	find_item(item) {
 		for (let [i, v] of Object.entries(this.verts)) {
@@ -114,6 +115,12 @@ class Store {
 		}
 
 		throw "rip in peperonis, no path found";
+	}
+	render(ctx, w, h) {
+		ctx.fillStyle = "black";
+		for (let box of this.gfx.boxes) {
+			ctx.fillRect(box.x * w, box.y * h, box.w * w, box.h * h);
+		}
 	}
 }
 
@@ -213,7 +220,18 @@ let store = new Store(`{
 		[
 			{ "weight": 2, "dest": 3 }
 		]
-	]
+	],
+	"gfx": {
+		"boxes": [
+			{ "x": 0,     "y": 0.75,  "w": 0.125, "h": 0.25  },
+			{ "x": 0.25,  "y": 0.75,  "w": 0.45,  "h": 0.25  },
+			{ "x": 0.8,   "y": 0.75,  "w": 0.2,   "h": 0.25  },
+			{ "x": 0.125, "y": 0.5,   "w": 0.25,  "h": 0.125 },
+			{ "x": 0.4,   "y": 0.375, "w": 0.06,  "h": 0.25  },
+			{ "x": 0.5,   "y": 0.375, "w": 0.06,  "h": 0.25  },
+			{ "x": 0.6,   "y": 0.375, "w": 0.06,  "h": 0.25  }
+		]
+	}
 }`);
 
 let shopping_list = new ShoppingList();
@@ -259,6 +277,17 @@ window.addEventListener('keydown', ({ key }) => {
 		setTimeout(() => add_item_itx.focus(), 10);
 	}
 });
+
+let canvas = document.querySelector("canvas");
+let ctx = canvas.getContext("2d");
+function render() {
+	ctx.fillStyle = "white";
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+	store.render(ctx, canvas.width, canvas.height);
+
+	window.requestAnimationFrame(render.bind(this, ...arguments));
+}
+render();
 
 const lib = {
 	index_of_fn: function(list, predicate) {
