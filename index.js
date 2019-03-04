@@ -3,10 +3,8 @@ const name_of_item = {
 	"7780721820430": "Mjölk",
 	"6405090401472": "Fil",
 	"7340116870009": "Aloe Vera Original",
-	"1234567890123": "Exempelvara 1",
-	"1234554390123": "Exempelvara 2",
-	"1234567890113": "Exempelvara 3",
-	"1234574230123": "Exempelvara 4",
+	"7310865003201": "Vispgrädde",
+	"1234567890123": "Baileys",
 };
 
 class Item {
@@ -126,8 +124,14 @@ class ShoppingList {
 		this.ul = document.querySelector("#shoplist");
 	}
 	get_fastest_path_in_store(store) {
+		if (!store instanceof Store) throw "Thats not a store, m8";
+
 		if (this.items.length == 0)
 			throw "Yer already done m8, shopping list empty";
+		
+		for (let item of this.items)
+			if (store.find_item(item) == -1)
+				throw `${item.name} does not exist in this store`;
 
 		let perms = lib.all_permutations(this.items);
 
@@ -148,14 +152,7 @@ class ShoppingList {
 
 		return (this.path = shortest_perm);
 	}
-	add(item) {
-		if (!item instanceof Item)
-			throw "You can only add items to your shopping list, m8";
-
-		this.items.push(item);
-		this.update();
-	}
-	emplace_item(s) {
+	add_item(s) {
 		try {
 			this.items.push(new Item(s));
 			this.update();
@@ -257,7 +254,7 @@ add_item_itx.is_shown = false;
 add_item_btn.addEventListener('click', function() {
 	if (add_item_itx.is_shown) {
 		if (!add_item_itx.value == "") {
-			if (shopping_list.emplace_item(add_item_itx.value)) {
+			if (shopping_list.add_item(add_item_itx.value)) {
 				add_item_itx.value = "";
 				add_item_itx.is_shown = false;
 				add_item_itx.style.display = "none";
@@ -280,7 +277,7 @@ window.addEventListener('keydown', ({ key }) => {
 
 	if (add_item_itx.is_shown) {
 		if (!add_item_itx.value == "") {
-			shopping_list.emplace_item(add_item_itx.value);
+			shopping_list.add_item(add_item_itx.value);
 			add_item_itx.value = "";
 		}
 		add_item_itx.style.display = "none";
