@@ -62,14 +62,14 @@ class Store {
 	}
 	path_from_entrance_to_item(item) {
 		return this.path_between_vertices(
-			lib.index_of_fn(this.verts, v => v.entrance),
+			this.verts.indexOfFn(v => v.entrance),
 			this.find_item(item),
 		);
 	}
 	path_from_item_to_checkout(item) {
 		return this.path_between_vertices(
 			this.find_item(item),
-			lib.index_of_fn(this.verts, v => v.checkout),
+			this.verts.indexOfFn(v => v.checkout)
 		)
 	}
 	path_between_vertices(src, dst) {
@@ -223,21 +223,27 @@ let store = new Store(`{
 	],
 	"gfx": {
 		"boxes": [
-			{ "x": 0,     "y": 0.75,  "w": 0.125, "h": 0.25  },
-			{ "x": 0.25,  "y": 0.75,  "w": 0.45,  "h": 0.25  },
-			{ "x": 0.8,   "y": 0.75,  "w": 0.2,   "h": 0.25  },
-			{ "x": 0.125, "y": 0.5,   "w": 0.25,  "h": 0.125 },
-			{ "x": 0.4,   "y": 0.375, "w": 0.06,  "h": 0.25  },
-			{ "x": 0.5,   "y": 0.375, "w": 0.06,  "h": 0.25  },
-			{ "x": 0.6,   "y": 0.375, "w": 0.06,  "h": 0.25  }
+			{ "x": 0,     "y": 0.75,  "w": 0.1,  "h": 0.25  },
+			{ "x": 0.2,   "y": 0.75,  "w": 0.6,  "h": 0.25  },
+			{ "x": 0.9,   "y": 0.75,  "w": 0.1,  "h": 0.25  },
+			{ "x": 0.125, "y": 0.525, "w": 0.25, "h": 0.125 },
+			{ "x": 0.43,  "y": 0.4,   "w": 0.12, "h": 0.125 },
+			{ "x": 0.6,   "y": 0.4,   "w": 0.06, "h": 0.25  },
+			{ "x": 0.7,   "y": 0.4,   "w": 0.06, "h": 0.25  },
+			{ "x": 0.8,   "y": 0.4,   "w": 0.06, "h": 0.25  },
+			{ "x": 0.3,   "y": 0.1,   "w": 0.65, "h": 0.15  },
+			{ "x": 0.185, "y": 0.1,   "w": 0.06, "h": 0.35  },
+			{ "x": 0.04,  "y": 0,     "w": 0.1,  "h": 0.3   },
+			{ "x": 0.91,  "y": 0.4,   "w": 0.09, "h": 0.1   }
 		]
 	}
 }`);
 
 let shopping_list = new ShoppingList();
 
-let add_item_btn = document.getElementById('add-item-btn');
-let add_item_itx = document.getElementById('add-item-itx');
+let add_item_btn = document.getElementById("add-item-btn");
+let add_item_itx = document.getElementById("add-item-itx");
+let start_route_btn = document.getElementById("start-route-btn");
 add_item_itx.is_shown = false;
 
 add_item_btn.addEventListener('click', function() {
@@ -278,8 +284,18 @@ window.addEventListener('keydown', ({ key }) => {
 	}
 });
 
+start_route_btn.addEventListener('click', () => {
+	shopping_list.get_fastest_path_in_store(store);
+});
+
 let canvas = document.querySelector("canvas");
 let ctx = canvas.getContext("2d");
+function resize() {
+	canvas.width = canvas.clientWidth;
+	canvas.height = canvas.clientHeight;
+	return resize;
+}
+window.addEventListener('resize', resize());
 function render() {
 	ctx.fillStyle = "white";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -290,14 +306,6 @@ function render() {
 render();
 
 const lib = {
-	index_of_fn: function(list, predicate) {
-		for (let [index, value] of Object.entries(list)) {
-			if (predicate(value)) {
-				return index;
-			}
-		}
-		return -1;
-	},
 	all_permutations: function(list) {
 		function inner(s, r, p) {
 			if (r.length == 0) {
@@ -317,3 +325,11 @@ const lib = {
 		return p;
 	}
 };
+
+Array.prototype.indexOfFn = function(predicate, fromIndex) {
+	for (let i = fromIndex ? fromIndex : 0; i < this.length; i++)
+		if (predicate(this[i]))
+			return i;
+
+	return -1;
+}
