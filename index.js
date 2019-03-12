@@ -186,16 +186,7 @@ class ShoppingList {
 		}
 	}
 }
-let a =
-{
-"8850749311446": "Munkar",
-"7780721820430": "Mjölk",
-"6405090401472": "Fil",
-"7340116870009": "Diverse Konserver",
-"7310865003201": "Vispgrädde",
-"1234567890123": "Julmust",
-"7698435798435": "Midsommarmust"
-}
+
 let store = new Store(JSON.stringify({
 	verts: [
 		{ entrance: true },
