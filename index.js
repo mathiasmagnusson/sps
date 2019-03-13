@@ -2,7 +2,7 @@ const name_of_item = {
 	"8850749311446": "Munkar",
 	"7780721820430": "Mjölk",
 	"6405090401472": "Fil",
-	"7340116870009": "Diverse Konserver",
+	"7340116870009": "Diverse konserver",
 	"7310865003201": "Vispgrädde",
 	"1234567890123": "Julmust",
 	"7698435798435": "Midsommarmust",
@@ -20,7 +20,7 @@ class Item {
 			return;
 		} else {
 			for (let [barcode, name] of Object.entries(name_of_item)) {
-				if (p == name) {
+				if (p.toLowerCase() == name.toLowerCase()) {
 					this.name = name;
 					this.barcode = barcode;
 					return;
