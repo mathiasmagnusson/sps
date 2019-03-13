@@ -136,7 +136,7 @@ class ShoppingList {
 
 		if (this.items.length == 0)
 			throw "Yer already done m8, shopping list empty";
-		
+
 		for (let item of this.items)
 			if (store.find_item(item) == -1)
 				throw `${item.name} does not exist in this store`;
@@ -150,7 +150,7 @@ class ShoppingList {
 				paths.push(store.path_between_items(perm[i], perm[i + 1]));
 			}
 			paths.push(store.path_from_item_to_checkout(perm[perm.length - 1]));
-			
+
 			let length = paths.map(({ length }) => length).reduce((acc, length) => acc + length);
 			if (length < shortest_perm.length) {
 				shortest_perm.length = length;
@@ -166,7 +166,7 @@ class ShoppingList {
 			this.update();
 			return true;
 		}
-		catch(e) {
+		catch (e) {
 			alert(e);
 			return false;
 		}
@@ -190,49 +190,310 @@ class ShoppingList {
 let store = new Store(JSON.stringify({
 	verts: [
 		{ entrance: true },
-		{ items: [] },
-		{ items: ["8850749311446"] },
-		{ items: [] },
-		
+		{ items: [] }, // 1
+		{ items: [] }, // 2
+		{ items: [] }, // 3
+		{ items: [] }, // 4
+		{ items: [] }, // 5
+		{ items: [] }, // 6
+		{ items: [] }, // 7
+		{ items: [] }, // 8
+		{ items: [] }, // 9
+		{ items: [] }, // 10
+		{ items: [] }, // 11
+		{ items: [] }, // 12
+		{ items: [] }, // 13
+		{ items: [] }, // 14
+		{ items: [] }, // 15
+		{ items: [] }, // 16
+		{ items: [] }, // 17
+		{ items: [] }, // 18
+		{ items: [] }, // 19
+		{ items: [] }, // 20
+		{ items: [] }, // 21
+		{ items: [] }, // 22
+		{ items: [] }, // 23
+		{ items: [] }, // 24
+		{ items: [] }, // 25
+		{ items: [] }, // 26
+		{ items: [] }, // 27
+		{ items: [] }, // 28
+		{ items: [] }, // 29
+		{ items: [] }, // 30
+		{ items: [] }, // 31
+		{ items: [] }, // 32
+		{ items: [] }, // 33
+		{ items: [] }, // 34
+		{ items: [] }, // 35
+		{ items: [] }, // 36
+		{ items: [] }, // 37
+		{ items: [] }, // 38
+		{ items: [] }, // 39
+		{ items: [] }, // 40
+		{ items: [] }, // 41
+		{ items: [] }, // 42
+		{ items: [] }, // 43
 		{ checkout: true },
 	],
 	edges: [
 		[
-			{ weight: 1, dest: 1 }
-		]
+			{ weight: 5, dest: 1 },
+		], // e
+		[
+			{ weight: 5, dest:  0 },
+			{ weight: 2, dest:  2 },
+			{ weight: 2, dest:  4 },
+			{ weight: 4, dest: 14 },
+		], // 1
+		[
+			{ weight: 2, dest: 1 },
+			{ weight: 3, dest: 3 },
+			{ weight: 4, dest: 15 },
+		], // 2
+		[
+			{ weight: 3, dest: 2 },
+		], // 3
+		[
+			{ weight: 2,        dest: 1 },
+			{ weight: 3,        dest: 5 },
+			{ weight: sqrt(10), dest: 6 },
+			{ weight: 2,        dest: 25 },
+			{ weight: 1,        dest: 43 },
+		], // 4
+		[
+			{ weight: 3,        dest: 4 },
+			{ weight: 1,        dest: 6 },
+			{ weight: sqrt(10), dest: 43 },
+		], // 5
+		[
+			{ weight: sqrt(10), dest: 4 },
+			{ weight: 1, dest: 5 },
+			{ weight: 3, dest: 43 },
+		], // 6
+		[
+			{ weight: 2, dest: 8 },
+			{ weight: 3, dest: 11 },
+			{ weight: 2, dest: 26 },
+			{ weight: 2, dest: 43 },
+		], // 7
+		[
+			{ weight: 2, dest: 7 },
+			{ weight: 2, dest: 9 },
+			{ weight: 3, dest: 12 },
+		], // 8
+		[
+			{ weight: 2, dest: 8 },
+			{ weight: 2, dest: 10 },
+			{ weight: 3, dest: 13 },
+		], // 9
+		[
+			{ weight: 2, dest: 9 },
+			{ weight: 2, dest: 27 },
+			{ weight: 5, dest: 44 },
+		], // 10
+		[
+			{ weight: 3, dest: 7 },
+		], // 11
+		[
+			{ weight: 3, dest: 8 },
+		], // 12
+		[
+			{ weight: 3, dest: 9 },
+		], // 13
+		[
+			{ weight: 4, dest: 1 },
+			{ weight: 2, dest: 15 },
+			{ weight: 2, dest: 24 },
+		], // 14
+		[
+			{ weight: 4, dest: 2 },
+			{ weight: 2, dest: 14 },
+			{ weight: 2, dest: 16 },
+		], // 15
+		[
+			{ weight: 2, dest: 15 },
+			{ weight: 2, dest: 17 },
+			{ weight: 4, dest: 23 },
+		], // 16
+		[
+			{ weight: 2, dest: 16 },
+			{ weight: 2, dest: 18 },
+			{ weight: 2, dest: 19 },
+		], // 17
+		[
+			{ weight: 2, dest: 17 },
+			{ weight: 2, dest: 20 },
+		], // 18
+		[
+			{ weight: 2, dest: 17 },
+			{ weight: 2, dest: 20 },
+			{ weight: 2, dest: 22 },
+		], // 19
+		[
+			{ weight: 2, dest: 18 },
+			{ weight: 2, dest: 19 },
+			{ weight: 2, dest: 21 },
+		], // 20
+		[
+			{ weight: 2, dest: 20 },
+			{ weight: 2, dest: 22 },
+			{ weight: 3, dest: 33 },
+		], // 21
+		[
+			{ weight: 2, dest: 19 },
+			{ weight: 2, dest: 21 },
+			{ weight: 2, dest: 23 },
+			{ weight: 3, dest: 34 },
+		], // 22
+		[
+			{ weight: 4, dest: 16 },
+			{ weight: 2, dest: 22 },
+			{ weight: 2, dest: 24 },
+			{ weight: 3, dest: 35 },
+			{ weight: sqrt(13), dest: 36 },
+		], // 23
+		[
+			{ weight: 2, dest: 14 },
+			{ weight: 2, dest: 23 },
+			{ weight: 2, dest: 25 },
+			{ weight: 3, dest: 35 },
+			{ weight: sqrt(13), dest: 36 },
+		], // 24
+		[
+			{ weight: 2, dest: 4 },
+			{ weight: 2, dest: 24 },
+			{ weight: 3, dest: 26 },
+		], // 25
+		[
+			{ weight: 2, dest: 7 },
+			{ weight: 3, dest: 25 },
+			{ weight: 2, dest: 36 },
+			{ weight: 3, dest: 39 },
+		], // 26
+		[
+			{ weight: 2, dest: 10 },
+			{ weight: 2, dest: 28 },
+			{ weight: 3, dest: 39 },
+		], // 27
+		[
+			{ weight: 2, dest: 27 },
+			{ weight: 2, dest: 29 },
+			{ weight: 3, dest: 40 },
+		], // 28
+		[
+			{ weight: 2, dest: 28 },
+			{ weight: 2, dest: 30 },
+			{ weight: 3, dest: 41 },
+		], // 29
+		[
+			{ weight: 2, dest: 29 },
+			{ weight: 2, dest: 31 },
+			{ weight: 3, dest: 42 },
+		], // 30
+		[
+			{ weight: 2, dest: 30 },
+			{ weight: 3, dest: 32 },
+		], // 31
+		[
+			{ weight: 3, dest: 31 },
+			{ weight: 3, dest: 33 },
+			{ weight: 1, dest: 37 },
+			{ weight: sqrt(10), dest: 38 },
+		], // 32
+		[
+			{ weight: 3, dest: 21 },
+			{ weight: 3, dest: 32 },
+			{ weight: sqrt(10), dest: 37 },
+			{ weight: 1, dest: 38 },
+		], // 33
+		[
+			{ weight: 3, dest: 22 },
+			{ weight: 2, dest: 33 },
+			{ weight: 2, dest: 35 },
+			{ weight: 3, dest: 42 },
+		], // 34
+		[
+			{ weight: 3, dest: 23 },
+			{ weight: sqrt(13), dest: 24 },
+			{ weight: 2, dest: 34 },
+			{ weight: 2, dest: 36 },
+			{ weight: 3, dest: 41 },
+		], // 35
+		[
+			{ weight: sqrt(13), dest: 23 },
+			{ weight: 3, dest: 24 },
+			{ weight: 2, dest: 26 },
+			{ weight: 2, dest: 35 },
+			{ weight: 3, dest: 40 },
+		], // 36
+		[
+			{ weight: 1, dest: 32 },
+			{ weight: sqrt(10), dest: 33 },
+			{ weight: 3, dest: 38 },
+		], // 37
+		[
+			{ weight: sqrt(10), dest: 32 },
+			{ weight: 1, dest: 33 },
+			{ weight: 3, dest: 37 },
+		], // 38
+		[
+			{ weight: 3, dest: 26 },
+			{ weight: 3, dest: 27 },
+		], // 39
+		[
+			{ weight: 3, dest: 28 },
+			{ weight: 3, dest: 36 },
+		], // 40
+		[
+			{ weight: 3, dest: 29 },
+			{ weight: 3, dest: 35 },
+		], // 41
+		[
+			{ weight: 3, dest: 30 },
+			{ weight: 3, dest: 34 },
+		], // 42
+		[
+			{ weight: 1, dest: 4 },
+			{ weight: sqrt(10), dest: 5 },
+			{ weight: 3, dest: 6 },
+			{ weight: 2, dest: 7 },
+		], // 43
+		[
+			{ weight: 5, dest: 10 },
+		], // c
 	],
 	gfx: {
 		boxes: [
-			{ x: 0,      y: 0,      w: 0.25,   h: 0.0625 },
-			{ x: 0,      y: 0,      w: 0.0625, h: 0.25   },
-			{ x: 0.5,    y: 0,      w: 0.15,   h: 0.0625 },
-			{ x: 0.5,    y: 0.125,  w: 0.15,   h: 0.0625 },
-			{ x: 0.5,    y: 0.25,   w: 0.15,   h: 0.0625 },
-			{ x: 0.5,    y: 0.5,    w: 0.15,   h: 0.0625 },
-			{ x: 0.5,    y: 0.625,  w: 0.15,   h: 0.0625 },
-			{ x: 0.7,    y: 0,      w: 0.3,    h: 0.0625 },
-			{ x: 0.125,  y: 0.125,  w: 0.3,    h: 0.0625 },
-			{ x: 0.125,  y: 0.25,   w: 0.3,    h: 0.0625 },
-			{ x: 0.125,  y: 0.375,  w: 0.3,    h: 0.0625 },
-			{ x: 0.125,  y: 0.5,    w: 0.3,    h: 0.0625 },
-			{ x: 0.125,  y: 0.625,  w: 0.3,    h: 0.0625 },
-			{ x: 0.7,    y: 0.125,  w: 0.0625, h: 0.0625 },
-			{ x: 0.825,  y: 0.125,  w: 0.0625, h: 0.0625 },
-			{ x: 0.7,    y: 0.25,   w: 0.1875, h: 0.0625 },
-			{ x: 0.7,    y: 0.375,  w: 0.1875, h: 0.0625 },
-			{ x: 0.9375, y: 0,      w: 0.0625, h: 0.3125 },
-			{ x: 0,      y: 0.3125, w: 0.0625, h: 0.375  },
-			{ x: 0,      y: 0.75,   w: 0.0625, h: 0.25   },
-			{ x: 0.125,  y: 0.75,   w: 0.0625, h: 0.25   },
-			{ x: 0.25,   y: 0.75,   w: 0.0625, h: 0.25   },
-			{ x: 0.375,  y: 0.75,   w: 0.0625, h: 0.25   },
-			{ x: 0.5,    y: 0.75,   w: 0.0625, h: 0.25   },
-			{ x: 0.9375, y: 0.75,   w: 0.0625, h: 0.25   },
-			{ x: 0.9375, y: 0.4375, w: 0.0625, h: 0.25   },
-			{ x: 0.7,    y: 0.75,   w: 0.0625, h: 0.25   },
-			{ x: 0.825,  y: 0.75,   w: 0.0625, h: 0.25   },
-			{ x: 0.7,    y: 0.5,    w: 0.0625, h: 0.1875 },
-			{ x: 0.825,  y: 0.5,    w: 0.0625, h: 0.1875 },
+			{ x: 0, y: 0, w: 0.25, h: 0.0625 },
+			{ x: 0, y: 0, w: 0.0625, h: 0.25 },
+			{ x: 0.5, y: 0, w: 0.15, h: 0.0625 },
+			{ x: 0.5, y: 0.125, w: 0.15, h: 0.0625 },
+			{ x: 0.5, y: 0.25, w: 0.15, h: 0.0625 },
+			{ x: 0.5, y: 0.5, w: 0.15, h: 0.0625 },
+			{ x: 0.5, y: 0.625, w: 0.15, h: 0.0625 },
+			{ x: 0.7, y: 0, w: 0.3, h: 0.0625 },
+			{ x: 0.125, y: 0.125, w: 0.3, h: 0.0625 },
+			{ x: 0.125, y: 0.25, w: 0.3, h: 0.0625 },
+			{ x: 0.125, y: 0.375, w: 0.3, h: 0.0625 },
+			{ x: 0.125, y: 0.5, w: 0.3, h: 0.0625 },
+			{ x: 0.125, y: 0.625, w: 0.3, h: 0.0625 },
+			{ x: 0.7, y: 0.125, w: 0.0625, h: 0.0625 },
+			{ x: 0.825, y: 0.125, w: 0.0625, h: 0.0625 },
+			{ x: 0.7, y: 0.25, w: 0.1875, h: 0.0625 },
+			{ x: 0.7, y: 0.375, w: 0.1875, h: 0.0625 },
+			{ x: 0.9375, y: 0, w: 0.0625, h: 0.3125 },
+			{ x: 0, y: 0.3125, w: 0.0625, h: 0.375 },
+			{ x: 0, y: 0.75, w: 0.0625, h: 0.25 },
+			{ x: 0.125, y: 0.75, w: 0.0625, h: 0.25 },
+			{ x: 0.25, y: 0.75, w: 0.0625, h: 0.25 },
+			{ x: 0.375, y: 0.75, w: 0.0625, h: 0.25 },
+			{ x: 0.5, y: 0.75, w: 0.0625, h: 0.25 },
+			{ x: 0.9375, y: 0.75, w: 0.0625, h: 0.25 },
+			{ x: 0.9375, y: 0.4375, w: 0.0625, h: 0.25 },
+			{ x: 0.7, y: 0.75, w: 0.0625, h: 0.25 },
+			{ x: 0.825, y: 0.75, w: 0.0625, h: 0.25 },
+			{ x: 0.7, y: 0.5, w: 0.0625, h: 0.1875 },
+			{ x: 0.825, y: 0.5, w: 0.0625, h: 0.1875 },
 		]
 	}
 }));
@@ -244,7 +505,7 @@ let add_item_itx = document.getElementById("add-item-itx");
 let start_route_btn = document.getElementById("start-route-btn");
 add_item_itx.is_shown = false;
 
-add_item_btn.addEventListener('click', function() {
+add_item_btn.addEventListener('click', function () {
 	if (add_item_itx.is_shown) {
 		if (!add_item_itx.value == "") {
 			if (shopping_list.add_item(add_item_itx.value)) {
@@ -304,7 +565,7 @@ function render() {
 render();
 
 const lib = {
-	all_permutations: function(list) {
+	all_permutations: function (list) {
 		function inner(s, r, p) {
 			if (r.length == 0) {
 				p.push(s);
@@ -324,7 +585,7 @@ const lib = {
 	}
 };
 
-Array.prototype.indexOfFn = function(predicate, fromIndex) {
+Array.prototype.indexOfFn = function (predicate, fromIndex) {
 	for (let i = fromIndex ? fromIndex : 0; i < this.length; i++)
 		if (predicate(this[i]))
 			return i;
