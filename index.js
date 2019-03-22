@@ -256,17 +256,17 @@ let store = new Store(JSON.stringify({
 		[
 			{ weight: 2,        dest: 1 },
 			{ weight: 3,        dest: 5 },
-			{ weight: sqrt(10), dest: 6 },
+			{ weight: Math.sqrt(10), dest: 6 },
 			{ weight: 2,        dest: 25 },
 			{ weight: 1,        dest: 43 },
 		], // 4
 		[
 			{ weight: 3,        dest: 4 },
 			{ weight: 1,        dest: 6 },
-			{ weight: sqrt(10), dest: 43 },
+			{ weight: Math.sqrt(10), dest: 43 },
 		], // 5
 		[
-			{ weight: sqrt(10), dest: 4 },
+			{ weight: Math.sqrt(10), dest: 4 },
 			{ weight: 1, dest: 5 },
 			{ weight: 3, dest: 43 },
 		], // 6
@@ -289,7 +289,7 @@ let store = new Store(JSON.stringify({
 		[
 			{ weight: 2, dest: 9 },
 			{ weight: 2, dest: 27 },
-			{ weight: 5, dest: 44 },
+			{ weight: 4, dest: 44 },
 		], // 10
 		[
 			{ weight: 3, dest: 7 },
@@ -350,14 +350,14 @@ let store = new Store(JSON.stringify({
 			{ weight: 2, dest: 22 },
 			{ weight: 2, dest: 24 },
 			{ weight: 3, dest: 35 },
-			{ weight: sqrt(13), dest: 36 },
+			{ weight: Math.sqrt(13), dest: 36 },
 		], // 23
 		[
 			{ weight: 2, dest: 14 },
 			{ weight: 2, dest: 23 },
 			{ weight: 2, dest: 25 },
 			{ weight: 3, dest: 35 },
-			{ weight: sqrt(13), dest: 36 },
+			{ weight: Math.sqrt(13), dest: 36 },
 		], // 24
 		[
 			{ weight: 2, dest: 4 },
@@ -398,12 +398,12 @@ let store = new Store(JSON.stringify({
 			{ weight: 3, dest: 31 },
 			{ weight: 3, dest: 33 },
 			{ weight: 1, dest: 37 },
-			{ weight: sqrt(10), dest: 38 },
+			{ weight: Math.sqrt(10), dest: 38 },
 		], // 32
 		[
 			{ weight: 3, dest: 21 },
 			{ weight: 3, dest: 32 },
-			{ weight: sqrt(10), dest: 37 },
+			{ weight: Math.sqrt(10), dest: 37 },
 			{ weight: 1, dest: 38 },
 		], // 33
 		[
@@ -414,13 +414,13 @@ let store = new Store(JSON.stringify({
 		], // 34
 		[
 			{ weight: 3, dest: 23 },
-			{ weight: sqrt(13), dest: 24 },
+			{ weight: Math.sqrt(13), dest: 24 },
 			{ weight: 2, dest: 34 },
 			{ weight: 2, dest: 36 },
 			{ weight: 3, dest: 41 },
 		], // 35
 		[
-			{ weight: sqrt(13), dest: 23 },
+			{ weight: Math.sqrt(13), dest: 23 },
 			{ weight: 3, dest: 24 },
 			{ weight: 2, dest: 26 },
 			{ weight: 2, dest: 35 },
@@ -428,11 +428,11 @@ let store = new Store(JSON.stringify({
 		], // 36
 		[
 			{ weight: 1, dest: 32 },
-			{ weight: sqrt(10), dest: 33 },
+			{ weight: Math.sqrt(10), dest: 33 },
 			{ weight: 3, dest: 38 },
 		], // 37
 		[
-			{ weight: sqrt(10), dest: 32 },
+			{ weight: Math.sqrt(10), dest: 32 },
 			{ weight: 1, dest: 33 },
 			{ weight: 3, dest: 37 },
 		], // 38
@@ -454,7 +454,7 @@ let store = new Store(JSON.stringify({
 		], // 42
 		[
 			{ weight: 1, dest: 4 },
-			{ weight: sqrt(10), dest: 5 },
+			{ weight: Math.sqrt(10), dest: 5 },
 			{ weight: 3, dest: 6 },
 			{ weight: 2, dest: 7 },
 		], // 43
