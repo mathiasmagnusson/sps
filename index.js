@@ -6,6 +6,7 @@ const name_of_item = {
 	"7310865003201": "Vispgrädde",
 	"1234567890123": "Julmust",
 	"7698435798435": "Midsommarmust",
+	"7342849038949": "Kattmat",
 };
 
 class Item {
