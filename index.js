@@ -118,11 +118,56 @@ class Store {
 
 		throw "rip in peperonis, no path found";
 	}
-	render(ctx, w, h) {
+	render(ctx, width, height) {
 		ctx.fillStyle = "black";
+		ctx.fillRect(0, 0, 8, 8);
+		ctx.scale(
+			width/this.gfx.size.x,
+			height/this.gfx.size.y,
+		);
 		for (let box of this.gfx.boxes) {
-			ctx.fillRect(box.x * w, box.y * h, box.w * w, box.h * h);
+			ctx.fillRect(
+				box.x,
+				box.y,
+				box.w,
+				box.h,
+			);
 		}
+
+		for (let [i, vert] of Object.entries(this.verts)) {
+			ctx.lineWidth = 0.1;
+			ctx.strokeStyle = "red";
+			for (let j of this.edges[i].map(e => e.dest)) {
+				if (i == j) continue;
+				let other = this.verts[j];
+				ctx.beginPath();
+				ctx.moveTo(vert.x + 0.5, vert.y + 0.5);
+				ctx.lineTo(other.x + 0.5, other.y + 0.5);
+				ctx.stroke();
+				ctx.closePath();
+			}
+		}
+
+		for (let [i, vert] of Object.entries(this.verts)) {
+			ctx.fillStyle = "green";
+			ctx.fillRect(vert.x + 0.1, vert.y + 0.1, 0.8, 0.8);
+			ctx.fillStyle = "white";
+			ctx.font = "0.6px Serif";
+			ctx.textBaseline = "middle";
+
+			ctx.fillText(
+				vert.entrance ? 'e'
+					: vert.checkout ? 'c'
+					: i,
+				vert.x + 0.21,
+				vert.y + 0.3
+			);
+		}
+
+		ctx.scale(
+			this.gfx.size.x/width,
+			this.gfx.size.y/height,
+		);
 	}
 }
 
@@ -190,51 +235,51 @@ class ShoppingList {
 
 let store = new Store(JSON.stringify({
 	verts: [
-		{ entrance: true },
-		{ items: [] }, // 1
-		{ items: [] }, // 2
-		{ items: [] }, // 3
-		{ items: [] }, // 4
-		{ items: [] }, // 5
-		{ items: [] }, // 6
-		{ items: [] }, // 7
-		{ items: [] }, // 8
-		{ items: [] }, // 9
-		{ items: [] }, // 10
-		{ items: [] }, // 11
-		{ items: [] }, // 12
-		{ items: [] }, // 13
-		{ items: [] }, // 14
-		{ items: [] }, // 15
-		{ items: [] }, // 16
-		{ items: [] }, // 17
-		{ items: [] }, // 18
-		{ items: [] }, // 19
-		{ items: [] }, // 20
-		{ items: [] }, // 21
-		{ items: [] }, // 22
-		{ items: [] }, // 23
-		{ items: [] }, // 24
-		{ items: [] }, // 25
-		{ items: [] }, // 26
-		{ items: [] }, // 27
-		{ items: [] }, // 28
-		{ items: [] }, // 29
-		{ items: [] }, // 30
-		{ items: [] }, // 31
-		{ items: [] }, // 32
-		{ items: [] }, // 33
-		{ items: [] }, // 34
-		{ items: [] }, // 35
-		{ items: [] }, // 36
-		{ items: [] }, // 37
-		{ items: [] }, // 38
-		{ items: [] }, // 39
-		{ items: [] }, // 40
-		{ items: [] }, // 41
-		{ items: [] }, // 42
-		{ items: [] }, // 43
-		{ checkout: true },
+		{ x: 12, y: 15, entrance: true },
+		{ x: 12, y: 11, items: [] }, // 1
+		{ x: 14, y: 11, items: [] }, // 2
+		{ x: 14, y: 14, items: [] }, // 3
+		{ x: 10, y: 11, items: [] }, // 4
+		{ x: 10, y: 14, items: [] }, // 5
+		{ x: 9, y: 14, items: [] }, // 6
+		{ x: 7, y: 11, items: [] }, // 7
+		{ x: 5, y: 11, items: [] }, // 8
+		{ x: 3, y: 11, items: [] }, // 9
+		{ x: 1, y: 11, items: [] }, // 10
+		{ x: 7, y: 14, items: [] }, // 11
+		{ x: 5, y: 14, items: [] }, // 12
+		{ x: 3, y: 14, items: [] }, // 13
+		{ x: 12, y: 7, items: [] }, // 14
+		{ x: 14, y: 7, items: [] }, // 15
+		{ x: 14, y: 5, items: [] }, // 16
+		{ x: 14, y: 3, items: [] }, // 17
+		{ x: 14, y: 1, items: [] }, // 18
+		{ x: 12, y: 3, items: [] }, // 19
+		{ x: 12, y: 1, items: [] }, // 20
+		{ x: 10, y: 1, items: [] }, // 21
+		{ x: 10, y: 3, items: [] }, // 22
+		{ x: 10, y: 5, items: [] }, // 23
+		{ x: 10, y: 7, items: [] }, // 24
+		{ x: 10, y: 9, items: [] }, // 25
+		{ x: 7, y: 9, items: [] }, // 26
+		{ x: 1, y: 9, items: [] }, // 27
+		{ x: 1, y: 7, items: [] }, // 28
+		{ x: 1, y: 5, items: [] }, // 29
+		{ x: 1, y: 3, items: [] }, // 30
+		{ x: 1, y: 1, items: [] }, // 31
+		{ x: 4, y: 1, items: [] }, // 32
+		{ x: 7, y: 1, items: [] }, // 33
+		{ x: 7, y: 3, items: [] }, // 34
+		{ x: 7, y: 5, items: [] }, // 35
+		{ x: 7, y: 7, items: [] }, // 36
+		{ x: 4, y: 0, items: [] }, // 37
+		{ x: 7, y: 0, items: [] }, // 38
+		{ x: 4, y: 9, items: [] }, // 39
+		{ x: 4, y: 7, items: [] }, // 40
+		{ x: 4, y: 5, items: [] }, // 41
+		{ x: 4, y: 3, items: [] }, // 42
+		{ x: 9, y: 11, items: [] }, // 43
+		{ x: 1, y: 15, checkout: true },
 	],
 	edges: [
 		[
@@ -464,37 +509,38 @@ let store = new Store(JSON.stringify({
 		], // c
 	],
 	gfx: {
+		size: { x: 16, y: 16 },
 		boxes: [
-			{ x: 0, y: 0, w: 0.25, h: 0.0625 },
-			{ x: 0, y: 0, w: 0.0625, h: 0.25 },
-			{ x: 0.5, y: 0, w: 0.15, h: 0.0625 },
-			{ x: 0.5, y: 0.125, w: 0.15, h: 0.0625 },
-			{ x: 0.5, y: 0.25, w: 0.15, h: 0.0625 },
-			{ x: 0.5, y: 0.5, w: 0.15, h: 0.0625 },
-			{ x: 0.5, y: 0.625, w: 0.15, h: 0.0625 },
-			{ x: 0.7, y: 0, w: 0.3, h: 0.0625 },
-			{ x: 0.125, y: 0.125, w: 0.3, h: 0.0625 },
-			{ x: 0.125, y: 0.25, w: 0.3, h: 0.0625 },
-			{ x: 0.125, y: 0.375, w: 0.3, h: 0.0625 },
-			{ x: 0.125, y: 0.5, w: 0.3, h: 0.0625 },
-			{ x: 0.125, y: 0.625, w: 0.3, h: 0.0625 },
-			{ x: 0.7, y: 0.125, w: 0.0625, h: 0.0625 },
-			{ x: 0.825, y: 0.125, w: 0.0625, h: 0.0625 },
-			{ x: 0.7, y: 0.25, w: 0.1875, h: 0.0625 },
-			{ x: 0.7, y: 0.375, w: 0.1875, h: 0.0625 },
-			{ x: 0.9375, y: 0, w: 0.0625, h: 0.3125 },
-			{ x: 0, y: 0.3125, w: 0.0625, h: 0.375 },
-			{ x: 0, y: 0.75, w: 0.0625, h: 0.25 },
-			{ x: 0.125, y: 0.75, w: 0.0625, h: 0.25 },
-			{ x: 0.25, y: 0.75, w: 0.0625, h: 0.25 },
-			{ x: 0.375, y: 0.75, w: 0.0625, h: 0.25 },
-			{ x: 0.5, y: 0.75, w: 0.0625, h: 0.25 },
-			{ x: 0.9375, y: 0.75, w: 0.0625, h: 0.25 },
-			{ x: 0.9375, y: 0.4375, w: 0.0625, h: 0.25 },
-			{ x: 0.7, y: 0.75, w: 0.0625, h: 0.25 },
-			{ x: 0.825, y: 0.75, w: 0.0625, h: 0.25 },
-			{ x: 0.7, y: 0.5, w: 0.0625, h: 0.1875 },
-			{ x: 0.825, y: 0.5, w: 0.0625, h: 0.1875 },
+			{ x: 0, y: 0, w: 4, h: 1 },
+			{ x: 0, y: 1, w: 1, h: 3 },
+			{ x: 11, y: 0, w: 5, h: 1 },
+			{ x: 15, y: 1, w: 1, h: 4 },
+			{ x: 0, y: 5, w: 1, h: 6 },
+			{ x: 15, y: 7, w: 1, h: 4 },
+			{ x: 2, y: 2, w: 5, h: 1 },
+			{ x: 2, y: 4, w: 5, h: 1 },
+			{ x: 2, y: 6, w: 5, h: 1 },
+			{ x: 2, y: 8, w: 5, h: 1 },
+			{ x: 2, y: 10, w: 5, h: 1 },
+			{ x: 0, y: 12, w: 1, h: 4 },
+			{ x: 2, y: 12, w: 1, h: 4 },
+			{ x: 4, y: 12, w: 1, h: 4 },
+			{ x: 6, y: 12, w: 1, h: 4 },
+			{ x: 8, y: 12, w: 1, h: 4 },
+			{ x: 11, y: 12, w: 1, h: 4 },
+			{ x: 13, y: 12, w: 1, h: 4 },
+			{ x: 15, y: 12, w: 1, h: 4 },
+			{ x: 11, y: 8, w: 1, h: 3 },
+			{ x: 13, y: 8, w: 1, h: 3 },
+			{ x: 8, y: 0, w: 2, h: 1 },
+			{ x: 8, y: 2, w: 2, h: 1 },
+			{ x: 8, y: 4, w: 2, h: 1 },
+			{ x: 8, y: 8, w: 2, h: 1 },
+			{ x: 8, y: 10, w: 2, h: 1 },
+			{ x: 11, y: 2, w: 1, h: 1 },
+			{ x: 13, y: 2, w: 1, h: 1 },
+			{ x: 11, y: 4, w: 3, h: 1 },
+			{ x: 11, y: 6, w: 3, h: 1 },
 		]
 	}
 }));
