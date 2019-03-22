@@ -28,7 +28,7 @@ class Item {
 				}
 			}
 		}
-		throw `Item "${p}" not found.`;
+		throw `Varan "${p}" finns inte.`;
 	}
 }
 
