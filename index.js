@@ -530,12 +530,16 @@ window.addEventListener('keydown', ({ key }) => {
 	if (key != "Enter") return;
 
 	if (add_item_itx.is_shown) {
-		if (!add_item_itx.value == "") {
-			shopping_list.add_item(add_item_itx.value);
-			add_item_itx.value = "";
+		if (add_item_itx.value == "") {
+			add_item_itx.style.display = "none";
+			add_item_itx.is_shown = false;
+		} else {
+			if (shopping_list.add_item(add_item_itx.value)) {
+				add_item_itx.value = "";
+				add_item_itx.style.display = "none";
+				add_item_itx.is_shown = false;
+			}
 		}
-		add_item_itx.style.display = "none";
-		add_item_itx.is_shown = false;
 	} else {
 		add_item_itx.is_shown = true;
 		add_item_itx.style.display = "block";
