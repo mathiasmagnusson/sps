@@ -237,10 +237,10 @@ let store = new Store(JSON.stringify({
 	],
 	edges: [
 		[
-			{ weight: 5, dest: 1 },
+			{ weight: 4, dest: 1 },
 		], // e
 		[
-			{ weight: 5, dest:  0 },
+			{ weight: 4, dest:  0 },
 			{ weight: 2, dest:  2 },
 			{ weight: 2, dest:  4 },
 			{ weight: 4, dest: 14 },
@@ -459,7 +459,7 @@ let store = new Store(JSON.stringify({
 			{ weight: 2, dest: 7 },
 		], // 43
 		[
-			{ weight: 5, dest: 10 },
+			{ weight: 4, dest: 10 },
 		], // c
 	],
 	gfx: {
