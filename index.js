@@ -178,14 +178,14 @@ class ShoppingList {
 		this.ul = document.querySelector("#shoplist");
 	}
 	get_fastest_path_in_store(store) {
-		if (!store instanceof Store) throw "Thats not a store, m8";
+		if (!store instanceof Store) throw "Man kan bara handra i affärer, inte i en/ett" + typeof store;
 
 		if (this.items.length == 0)
-			throw "Yer already done m8, shopping list empty";
+			throw "Du kan gå hem igen, inget att handla!";
 
 		for (let item of this.items)
 			if (store.find_item(item) == -1)
-				throw `${item.name} does not exist in this store`;
+				throw `${item.name} finns inte i den här affären, stick iväg!`;
 
 		let perms = lib.all_permutations(this.items);
 
