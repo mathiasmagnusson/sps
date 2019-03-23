@@ -179,7 +179,7 @@ class ShoppingList {
 		this.ul = document.querySelector("#shoplist");
 	}
 	getFastestPathInStore(store) {
-		if (!store instanceof Store) throw "Man kan bara handra i affärer, inte i en/ett" + typeof store;
+		if (!store instanceof Store) throw "Man kan bara handla i affärer, inte i en/ett" + typeof store;
 
 		if (this.items.length == 0)
 			throw "Du kan gå hem igen, inget att handla!";
