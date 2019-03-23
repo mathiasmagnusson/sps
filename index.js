@@ -1,4 +1,4 @@
-const name_of_item = {
+const nameOfItem = {
 	"8850749311446": "Munkar",
 	"7780721820430": "Mjölk",
 	"6405090401472": "Fil",
@@ -11,16 +11,16 @@ const name_of_item = {
 
 class Item {
 	constructor(p) {
-		if (typeof p == "string" && p.split('').every(c => /\d/.test(c)) && name_of_item[p]) {
-			this.name = name_of_item[p];
+		if (typeof p == "string" && p.split('').every(c => /\d/.test(c)) && nameOfItem[p]) {
+			this.name = nameOfItem[p];
 			this.barcode = p;
 			return;
-		} else if (typeof p == "number" && name_of_item[p.toString()]) {
-			this.name = name_of_item[p];
+		} else if (typeof p == "number" && nameOfItem[p.toString()]) {
+			this.name = nameOfItem[p];
 			this.barcode = p.toString();
 			return;
 		} else {
-			for (let [barcode, name] of Object.entries(name_of_item)) {
+			for (let [barcode, name] of Object.entries(nameOfItem)) {
 				if (p.toLowerCase() == name.toLowerCase()) {
 					this.name = name;
 					this.barcode = barcode;
@@ -44,11 +44,11 @@ class Store {
 		this.edges = json.edges;
 		this.gfx = json.gfx;
 	}
-	find_item(item) {
+	findItem(item) {
 		for (let [i, v] of Object.entries(this.verts)) {
 			if (v.items) {
-				for (let item_ of v.items) {
-					if (item.barcode == item_.barcode) {
+				for (let other of v.items) {
+					if (item.barcode == other.barcode) {
 						return i;
 					}
 				}
@@ -56,25 +56,25 @@ class Store {
 		}
 		return -1;
 	}
-	path_between_items(item1, item2) {
-		return this.path_between_vertices(
-			this.find_item(item1),
-			this.find_item(item2),
+	pathBetweenItems(item1, item2) {
+		return this.pathBetweenVertices(
+			this.findItem(item1),
+			this.findItem(item2),
 		);
 	}
-	path_from_entrance_to_item(item) {
-		return this.path_between_vertices(
+	pathFromEntranceToItem(item) {
+		return this.pathBetweenVertices(
 			this.verts.indexOfFn(v => v.entrance),
-			this.find_item(item),
+			this.findItem(item),
 		);
 	}
-	path_from_item_to_checkout(item) {
-		return this.path_between_vertices(
-			this.find_item(item),
+	pathFromItemToCheckout(item) {
+		return this.pathBetweenVertices(
+			this.findItem(item),
 			this.verts.indexOfFn(v => v.checkout)
 		)
 	}
-	path_between_vertices(src, dst) {
+	pathBetweenVertices(src, dst) {
 		if (src == -1 || dst == -1)
 			throw "Undefined src or dst";
 
@@ -177,36 +177,36 @@ class ShoppingList {
 		this.path = null;
 		this.ul = document.querySelector("#shoplist");
 	}
-	get_fastest_path_in_store(store) {
+	getFastestPathInStore(store) {
 		if (!store instanceof Store) throw "Man kan bara handra i affärer, inte i en/ett" + typeof store;
 
 		if (this.items.length == 0)
 			throw "Du kan gå hem igen, inget att handla!";
 
 		for (let item of this.items)
-			if (store.find_item(item) == -1)
+			if (store.findItem(item) == -1)
 				throw `${item.name} finns inte i den här affären, stick iväg!`;
 
-		let perms = lib.all_permutations(this.items);
+		let perms = lib.allPermutations(this.items);
 
-		let shortest_perm = { value: [], length: Infinity };
+		let shortestPerm = { value: [], length: Infinity };
 		for (let perm of perms) {
-			let paths = [store.path_from_entrance_to_item(perm[0])];
+			let paths = [store.pathFromEntranceToItem(perm[0])];
 			for (let i = 0; i < perm.length - 1; i++) {
-				paths.push(store.path_between_items(perm[i], perm[i + 1]));
+				paths.push(store.pathBetweenItems(perm[i], perm[i + 1]));
 			}
-			paths.push(store.path_from_item_to_checkout(perm[perm.length - 1]));
+			paths.push(store.pathFromItemToCheckout(perm[perm.length - 1]));
 
 			let length = paths.map(({ length }) => length).reduce((acc, length) => acc + length);
-			if (length < shortest_perm.length) {
-				shortest_perm.length = length;
-				shortest_perm.value = paths;
+			if (length < shortestPerm.length) {
+				shortestPerm.length = length;
+				shortestPerm.value = paths;
 			}
 		}
 
-		return (this.path = shortest_perm);
+		return (this.path = shortestPerm);
 	}
-	add_item(s) {
+	addItem(s) {
 		try {
 			this.items.push(new Item(s));
 			this.update();
@@ -548,31 +548,31 @@ let store = new Store(JSON.stringify({
 	}
 }));
 
-let shopping_list = new ShoppingList();
+let shoppingList = new ShoppingList();
 
-let add_item_btn = document.getElementById("add-item-btn");
-let add_item_itx = document.getElementById("add-item-itx");
-let start_route_btn = document.getElementById("start-route-btn");
-add_item_itx.is_shown = false;
+let addItemBtn = document.getElementById("add-item-btn");
+let addItemItx = document.getElementById("add-item-itx");
+let startRouteBtn = document.getElementById("start-route-btn");
+addItemItx.isShown = false;
 
-add_item_btn.addEventListener('click', function () {
-	if (add_item_itx.is_shown) {
-		if (!add_item_itx.value == "") {
-			if (shopping_list.add_item(add_item_itx.value)) {
-				add_item_itx.value = "";
-				add_item_itx.is_shown = false;
-				add_item_itx.style.display = "none";
+addItemBtn.addEventListener('click', function () {
+	if (addItemItx.isShown) {
+		if (!addItemItx.value == "") {
+			if (shoppingList.addItem(addItemItx.value)) {
+				addItemItx.value = "";
+				addItemItx.isShown = false;
+				addItemItx.style.display = "none";
 			}
 		}
 		else {
-			add_item_itx.is_shown = false;
-			add_item_itx.style.display = "none";
+			addItemItx.isShown = false;
+			addItemItx.style.display = "none";
 		}
 	}
 	else {
-		setTimeout(() => add_item_itx.focus(), 10);
-		add_item_itx.is_shown = true;
-		add_item_itx.style.display = "block";
+		setTimeout(() => addItemItx.focus(), 10);
+		addItemItx.isShown = true;
+		addItemItx.style.display = "block";
 	}
 });
 
@@ -580,29 +580,29 @@ window.addEventListener('keydown', event => {
 	const key = event.key;
 	if (key != "Enter") return;
 
-	if (add_item_itx.is_shown) {
-		if (add_item_itx.value == "") {
-			add_item_itx.style.display = "none";
-			add_item_itx.is_shown = false;
+	if (addItemItx.isShown) {
+		if (addItemItx.value == "") {
+			addItemItx.style.display = "none";
+			addItemItx.isShown = false;
 		} else {
-			if (shopping_list.add_item(add_item_itx.value)) {
-				add_item_itx.value = "";
-				add_item_itx.style.display = "none";
-				add_item_itx.is_shown = false;
+			if (shoppingList.addItem(addItemItx.value)) {
+				addItemItx.value = "";
+				addItemItx.style.display = "none";
+				addItemItx.isShown = false;
 			}
 		}
 	} else {
-		add_item_itx.is_shown = true;
-		add_item_itx.style.display = "block";
-		setTimeout(() => add_item_itx.focus(), 10);
+		addItemItx.isShown = true;
+		addItemItx.style.display = "block";
+		setTimeout(() => addItemItx.focus(), 10);
 	}
 
 	event.preventDefault();
 });
 
-start_route_btn.addEventListener('click', () => {
+startRouteBtn.addEventListener('click', () => {
 	try {
-		shopping_list.get_fastest_path_in_store(store);
+		shoppingList.getFastestPathInStore(store);
 	}
 	catch (e) {
 		alert(e);
@@ -633,7 +633,7 @@ setTimeout(() => {
 });
 
 const lib = {
-	all_permutations: function (list) {
+	allPermutations: function (list) {
 		function inner(s, r, p) {
 			if (r.length == 0) {
 				p.push(s);
