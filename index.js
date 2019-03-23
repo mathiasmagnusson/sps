@@ -44,6 +44,7 @@ class Store {
 		});
 		this.edges = json.edges;
 		this.gfx = json.gfx;
+		this.pbvCache = {};
 	}
 	findItem(item) {
 		for (let [i, v] of Object.entries(this.verts)) {
@@ -79,7 +80,7 @@ class Store {
 		if (src == -1 || dst == -1)
 			throw "Undefined src or dst";
 
-		let cache = window.pbvCache ? window.pbvCache : (() => { window.pbvCache = {}; return window.pbvCache })();
+		let cache = this.pbvCache;
 		// Check if we've calculated this path before
 		if (cache[`${src},${dst}`] != null) {
 			return cache[`${src},${dst}`];
@@ -136,9 +137,8 @@ class Store {
 
 		throw "rip in peperonis, no path found";
 	}
-	render(ctx, width, height) {
+	render(ctx, width, height, displayNodeLabels, displayAllEdges, activePath) {
 		ctx.fillStyle = "black";
-		ctx.fillRect(0, 0, 8, 8);
 		ctx.scale(
 			width/this.gfx.size.x,
 			height/this.gfx.size.y,
@@ -152,34 +152,63 @@ class Store {
 			);
 		}
 
-		for (let [i, vert] of Object.entries(this.verts)) {
+		if (activePath) {
 			ctx.lineWidth = 0.1;
-			ctx.strokeStyle = "red";
-			for (let j of this.edges[i].map(e => e.dest)) {
-				if (i == j) continue;
-				let other = this.verts[j];
+			for (let i = 0; i < activePath.paths.length; i++) {
+				if (i == activePath.at) continue;
+				ctx.strokeStyle = "grey";
 				ctx.beginPath();
-				ctx.moveTo(vert.x + 0.5, vert.y + 0.5);
-				ctx.lineTo(other.x + 0.5, other.y + 0.5);
+				ctx.moveTo(this.verts[activePath.paths[i].path[0]].x + 0.5, this.verts[activePath.paths[i].path[0]].y + 0.5);
+				for (let j = 1; j < activePath.paths[i].path.length; j++) {
+					let v = this.verts[activePath.paths[i].path[j]];
+					ctx.lineTo(v.x + 0.5, v.y + 0.5);
+				}
 				ctx.stroke();
 				ctx.closePath();
 			}
+			ctx.strokeStyle = "red";
+			ctx.beginPath();
+			ctx.moveTo(this.verts[activePath.paths[activePath.at].path[0]].x + 0.5, this.verts[activePath.paths[activePath.at].path[0]].y + 0.5);
+			for (let j = 1; j < activePath.paths[activePath.at].path.length; j++) {
+				let v = this.verts[activePath.paths[activePath.at].path[j]];
+				ctx.lineTo(v.x + 0.5, v.y + 0.5);
+			}
+			ctx.stroke();
+			ctx.closePath();
 		}
 
-		for (let [i, vert] of Object.entries(this.verts)) {
-			ctx.fillStyle = "green";
-			ctx.fillRect(vert.x + 0.1, vert.y + 0.1, 0.8, 0.8);
-			ctx.fillStyle = "white";
-			ctx.font = "0.6px Serif";
-			ctx.textBaseline = "middle";
+		if (displayAllEdges) {
+			for (let [i, vert] of Object.entries(this.verts)) {
+				ctx.lineWidth = 0.1;
+				ctx.strokeStyle = "red";
+				for (let j of this.edges[i].map(e => e.dest)) {
+					if (i == j) continue;
+					let other = this.verts[j];
+					ctx.beginPath();
+					ctx.moveTo(vert.x + 0.5, vert.y + 0.5);
+					ctx.lineTo(other.x + 0.5, other.y + 0.5);
+					ctx.stroke();
+					ctx.closePath();
+				}
+			}
+		}
 
-			ctx.fillText(
-				vert.entrance ? 'e'
+		if (displayNodeLabels) {
+			for (let [i, vert] of Object.entries(this.verts)) {
+				ctx.fillStyle = "green";
+				ctx.fillRect(vert.x + 0.1, vert.y + 0.1, 0.8, 0.8);
+				ctx.fillStyle = "white";
+				ctx.font = "0.6px Serif";
+				ctx.textBaseline = "middle";
+				
+				ctx.fillText(
+					vert.entrance ? 'e'
 					: vert.checkout ? 'c'
 					: i,
-				vert.x + 0.21,
-				vert.y + 0.3
-			);
+					vert.x + 0.21,
+					vert.y + 0.3
+				);
+			}
 		}
 
 		ctx.scale(
@@ -207,7 +236,7 @@ class ShoppingList {
 
 		let perms = lib.allPermutations(this.items);
 
-		let shortestPerm = { value: [], length: Infinity };
+		let shortestPerm = { paths: [], length: Infinity };
 		for (let perm of perms) {
 			let paths = [store.pathFromEntranceToItem(perm[0])];
 			for (let i = 0; i < perm.length - 1; i++) {
@@ -218,9 +247,11 @@ class ShoppingList {
 			let length = paths.map(({ length }) => length).reduce((acc, length) => acc + length);
 			if (length < shortestPerm.length) {
 				shortestPerm.length = length;
-				shortestPerm.value = paths;
+				shortestPerm.paths = paths;
 			}
 		}
+
+		shortestPerm.at = 0;
 
 		return (this.path = shortestPerm);
 	}
@@ -595,6 +626,8 @@ addItemBtn.addEventListener("click", function () {
 });
 
 window.addEventListener("keydown", event => {
+	if (event.ctrlKey) return;
+	if (shoppingList.path) return activeRouteKeyDown(event);
 	const key = event.key;
 	if (key != "Enter") return;
 
@@ -618,6 +651,21 @@ window.addEventListener("keydown", event => {
 	event.preventDefault();
 });
 
+let barcodeInput = "";
+function activeRouteKeyDown(event) {
+	if (event.code.startsWith("Digit")) {
+		barcodeInput += event.key.toString();
+	} else if (
+		event.key == "Enter" &&
+		store.verts[shoppingList.path.paths[shoppingList.path.at].path.slice(-1)[0]].items.map(item => item.barcode).some(barcode => barcode == barcodeInput)
+	) {
+		shoppingList.path.at++;
+		barcodeInput = "";
+	}
+
+	event.preventDefault();
+}
+
 startRouteBtn.addEventListener("click", () => {
 	try {
 		shoppingList.getFastestPathInStore(store);
@@ -638,7 +686,7 @@ window.addEventListener("resize", resize());
 function render() {
 	ctx.fillStyle = "white";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
-	store.render(ctx, canvas.width, canvas.height);
+	store.render(ctx, canvas.width, canvas.height, false, false, shoppingList.path);
 
 	window.requestAnimationFrame(render.bind(this, ...arguments));
 }
