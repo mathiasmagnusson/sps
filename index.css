@@ -18,6 +18,7 @@
 
 #shoplist-wrapper {
 	grid-area: shoplist;
+	position: relative;
 	padding: 20px;
 	font-family: 'Segoe UI SemiLight';
 	background-color: #eee;
@@ -52,6 +53,18 @@
 	width: 100%;
 }
 
+#start-route-btn {
+	position: absolute;
+	bottom: 20px;
+	left: 20px;
+	width: calc(100% - 40px);
+	height: 40px;
+	border-radius: 10px;
+	background-color: #85858d;
+	border: none;
+	font-size: 20px;
+}
+
 main {
 	grid-area: main;
 	overflow: hidden;
@@ -65,9 +78,8 @@ canvas {
 footer {
 	grid-area: footer;
 	display: flex;
-	flex-direction: row-reverse;
-}
-
-#start-route-btn {
-	
+	justify-content: center;
+	background-color: #ddd;
+	align-items: center;
+	font-family: 'Segoe UI', sans-serif;
 }

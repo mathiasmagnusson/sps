@@ -615,6 +615,12 @@ function render() {
 }
 render();
 
+setTimeout(() => {
+	let credits = document.querySelector("#credits");
+	let names = ["Ella", "David", "Mathias", "Sofie"].shuffle();
+	credits.textContent += `${names[0]}, ${names[1]}, ${names[2]} och ${names[3]}.`;
+});
+
 const lib = {
 	all_permutations: function (list) {
 		function inner(s, r, p) {
@@ -642,4 +648,17 @@ Array.prototype.indexOfFn = function (predicate, fromIndex) {
 			return i;
 
 	return -1;
+}
+
+Array.prototype.shuffle = function () {
+	let key = [Math.floor(Math.random() * 256), Math.floor(Math.random() * 256)];
+	let S = this.map((_, i) => i);
+	let j = 0;
+	for (let i = 0; i < S.length; i++) {
+		j = (j + S[i] + key[i % key.length]) % S.length;
+		let swap = S[i];
+		S[i] = S[j];
+		S[j] = swap;
+	}
+	return this.map((_, i) => this[S[i]]);
 }
