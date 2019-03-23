@@ -598,7 +598,12 @@ window.addEventListener('keydown', ({ key }) => {
 });
 
 start_route_btn.addEventListener('click', () => {
-	shopping_list.get_fastest_path_in_store(store);
+	try {
+		shopping_list.get_fastest_path_in_store(store);
+	}
+	catch (e) {
+		alert(e);
+	}
 });
 
 let canvas = document.querySelector("canvas");
