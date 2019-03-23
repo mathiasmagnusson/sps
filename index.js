@@ -89,7 +89,7 @@ class Store {
 			let reversed = cache[`${dst},${src}`];
 			cache[`${src},${dst}`] = {
 				length: reversed.length,
-				path: new Array(reversed.path).reverse(),
+				path: Array.from(reversed.path).reverse(),
 			};
 			return cache[`${src},${dst}`];
 		}
