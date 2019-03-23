@@ -5,8 +5,9 @@ const nameOfItem = {
 	"7340116870009": "Diverse konserver",
 	"7310865003201": "Vispgrädde",
 	"1234567890123": "Julmust",
-	"7698435798435": "Midsommarmust",
+	"7698435798435": "Bra betyg",
 	"7342849038949": "Kattmat",
+	"5000112579758": "Coca Cola",
 };
 
 class Item {
@@ -241,7 +242,7 @@ let store = new Store(JSON.stringify({
 		{ x: 12, y: 15, entrance: true },
 		{ x: 12, y: 11, items: [] }, // 1
 		{ x: 14, y: 11, items: [] }, // 2
-		{ x: 14, y: 14, items: [] }, // 3
+		{ x: 14, y: 14, items: ["7698435798435"] }, // 3
 		{ x: 10, y: 11, items: [] }, // 4
 		{ x: 10, y: 14, items: [] }, // 5
 		{ x: 9, y: 14, items: [] }, // 6
@@ -249,14 +250,14 @@ let store = new Store(JSON.stringify({
 		{ x: 5, y: 11, items: [] }, // 8
 		{ x: 3, y: 11, items: [] }, // 9
 		{ x: 1, y: 11, items: [] }, // 10
-		{ x: 7, y: 14, items: [] }, // 11
+		{ x: 7, y: 14, items: ["7342849038949"] }, // 11
 		{ x: 5, y: 14, items: [] }, // 12
 		{ x: 3, y: 14, items: [] }, // 13
 		{ x: 12, y: 7, items: [] }, // 14
-		{ x: 14, y: 7, items: [] }, // 15
+		{ x: 14, y: 7, items: ["1234567890123"] }, // 15
 		{ x: 14, y: 5, items: [] }, // 16
 		{ x: 14, y: 3, items: [] }, // 17
-		{ x: 14, y: 1, items: [] }, // 18
+		{ x: 14, y: 1, items: ["7340116870009"] }, // 18
 		{ x: 12, y: 3, items: [] }, // 19
 		{ x: 12, y: 1, items: [] }, // 20
 		{ x: 10, y: 1, items: [] }, // 21
@@ -268,19 +269,19 @@ let store = new Store(JSON.stringify({
 		{ x: 1, y: 9, items: [] }, // 27
 		{ x: 1, y: 7, items: [] }, // 28
 		{ x: 1, y: 5, items: [] }, // 29
-		{ x: 1, y: 3, items: [] }, // 30
-		{ x: 1, y: 1, items: [] }, // 31
+		{ x: 1, y: 3, items: ["6405090401472"] }, // 30
+		{ x: 1, y: 1, items: ["7780721820430"] }, // 31
 		{ x: 4, y: 1, items: [] }, // 32
 		{ x: 7, y: 1, items: [] }, // 33
 		{ x: 7, y: 3, items: [] }, // 34
 		{ x: 7, y: 5, items: [] }, // 35
 		{ x: 7, y: 7, items: [] }, // 36
 		{ x: 4, y: 0, items: [] }, // 37
-		{ x: 7, y: 0, items: [] }, // 38
-		{ x: 4, y: 9, items: [] }, // 39
+		{ x: 7, y: 0, items: ["5000112579758"] }, // 38
+		{ x: 4, y: 9, items: ["8850749311446"] }, // 39
 		{ x: 4, y: 7, items: [] }, // 40
 		{ x: 4, y: 5, items: [] }, // 41
-		{ x: 4, y: 3, items: [] }, // 42
+		{ x: 4, y: 3, items: ["7310865003201"] }, // 42
 		{ x: 9, y: 11, items: [] }, // 43
 		{ x: 1, y: 15, checkout: true },
 	],
