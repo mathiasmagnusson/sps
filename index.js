@@ -229,7 +229,7 @@ class ShoppingList {
 			let li = document.createElement("li");
 			li.textContent = item.name;
 			li.setAttribute("barcode", item.barcode);
-			li.addEventListener('click', () => {
+			li.addEventListener("click", () => {
 				this.remove(item);
 			});
 			ul.appendChild(li);
@@ -556,7 +556,7 @@ let addItemItx = document.getElementById("add-item-itx");
 let startRouteBtn = document.getElementById("start-route-btn");
 addItemItx.isShown = false;
 
-addItemBtn.addEventListener('click', function () {
+addItemBtn.addEventListener("click", function () {
 	if (addItemItx.isShown) {
 		if (!addItemItx.value == "") {
 			if (shoppingList.addItem(addItemItx.value)) {
@@ -577,7 +577,7 @@ addItemBtn.addEventListener('click', function () {
 	}
 });
 
-window.addEventListener('keydown', event => {
+window.addEventListener("keydown", event => {
 	const key = event.key;
 	if (key != "Enter") return;
 
@@ -601,7 +601,7 @@ window.addEventListener('keydown', event => {
 	event.preventDefault();
 });
 
-startRouteBtn.addEventListener('click', () => {
+startRouteBtn.addEventListener("click", () => {
 	try {
 		shoppingList.getFastestPathInStore(store);
 	}
