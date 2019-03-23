@@ -616,7 +616,7 @@ function resize() {
 	canvas.height = canvas.clientHeight;
 	return resize;
 }
-window.addEventListener('resize', resize());
+window.addEventListener("resize", resize());
 function render() {
 	ctx.fillStyle = "white";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
