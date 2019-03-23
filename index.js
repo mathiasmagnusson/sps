@@ -79,6 +79,21 @@ class Store {
 		if (src == -1 || dst == -1)
 			throw "Undefined src or dst";
 
+		let cache = window.pbvCache ? window.pbvCache : (() => { window.pbvCache = {}; return window.pbvCache })();
+		// Check if we've calculated this path before
+		if (cache[`${src},${dst}`] != null) {
+			return cache[`${src},${dst}`];
+		}
+		// Check if we've done the reverse calculation before
+		else if (cache[`${dst},${src}`] != null) {
+			let reversed = cache[`${dst},${src}`];
+			cache[`${src},${dst}`] = {
+				length: reversed.length,
+				path: new Array(reversed.path).reverse(),
+			};
+			return cache[`${src},${dst}`];
+		}
+
 		let dist = this.verts.map(() => Infinity);
 		let prev = this.verts.map(() => -1);
 		let nx = this.verts.map((_, i) => i);
@@ -105,7 +120,9 @@ class Store {
 					u = prev[u];
 				}
 
-				return { path, length: dist[dst] };
+				let result = { path, length: dist[dst] };
+				cache[`${src},${dst}`] = result;
+				return result;
 			}
 
 			for (let { dest: v, weight } of this.edges[u]) {
