@@ -228,6 +228,9 @@ class ShoppingList {
 			let li = document.createElement("li");
 			li.textContent = item.name;
 			li.setAttribute("barcode", item.barcode);
+			li.addEventListener('click', () => {
+				this.remove(item);
+			});
 			ul.appendChild(li);
 		}
 	}
