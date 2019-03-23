@@ -576,7 +576,8 @@ add_item_btn.addEventListener('click', function () {
 	}
 });
 
-window.addEventListener('keydown', ({ key }) => {
+window.addEventListener('keydown', event => {
+	const key = event.key;
 	if (key != "Enter") return;
 
 	if (add_item_itx.is_shown) {
@@ -595,6 +596,8 @@ window.addEventListener('keydown', ({ key }) => {
 		add_item_itx.style.display = "block";
 		setTimeout(() => add_item_itx.focus(), 10);
 	}
+
+	event.preventDefault();
 });
 
 start_route_btn.addEventListener('click', () => {
