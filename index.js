@@ -5,7 +5,7 @@ const nameOfItem = {
 	"7340116870009": "Diverse konserver",
 	"7310865003201": "Vispgrädde",
 	"1234567890123": "Julmust",
-	"7698435798435": "Bra betyg",
+	"769": "Bra betyg",
 	"7342849038949": "Kattmat",
 	"5000112579758": "Coca Cola",
 };
@@ -238,11 +238,11 @@ class ShoppingList {
 
 		let shortestPerm = { paths: [], length: Infinity };
 		for (let perm of perms) {
-			let paths = [store.pathFromEntranceToItem(perm[0])];
+			let paths = [{ item: perm[0], ...store.pathFromEntranceToItem(perm[0]) }];
 			for (let i = 0; i < perm.length - 1; i++) {
-				paths.push(store.pathBetweenItems(perm[i], perm[i + 1]));
+				paths.push({ item: perm[i + 1], ...store.pathBetweenItems(perm[i], perm[i + 1]) });
 			}
-			paths.push(store.pathFromItemToCheckout(perm[perm.length - 1]));
+			paths.push({ item: null, ...store.pathFromItemToCheckout(perm[perm.length - 1]) });
 
 			let length = paths.map(({ length }) => length).reduce((acc, length) => acc + length);
 			if (length < shortestPerm.length) {
@@ -290,7 +290,7 @@ let store = new Store(JSON.stringify({
 		{ x: 12, y: 15, entrance: true },
 		{ x: 12, y: 11, items: [] }, // 1
 		{ x: 14, y: 11, items: [] }, // 2
-		{ x: 14, y: 14, items: ["7698435798435"] }, // 3
+		{ x: 14, y: 14, items: ["769"] }, // 3
 		{ x: 10, y: 11, items: [] }, // 4
 		{ x: 10, y: 14, items: [] }, // 5
 		{ x: 9, y: 14, items: [] }, // 6
@@ -626,7 +626,7 @@ addItemBtn.addEventListener("click", function () {
 });
 
 window.addEventListener("keydown", event => {
-	if (event.ctrlKey) return;
+	if (event.ctrlKey || event.code.startsWith("F")) return;
 	if (shoppingList.path) return activeRouteKeyDown(event);
 	const key = event.key;
 	if (key != "Enter") return;
@@ -652,6 +652,9 @@ window.addEventListener("keydown", event => {
 });
 
 let barcodeInput = "";
+let nextItem = document.querySelector("#next-item");
+let nextItemP = document.querySelector("#next-item p");
+let nextItemHeading = document.querySelector("#next-item h2");
 function activeRouteKeyDown(event) {
 	if (event.code.startsWith("Digit")) {
 		barcodeInput += event.key.toString();
@@ -660,6 +663,13 @@ function activeRouteKeyDown(event) {
 		store.verts[shoppingList.path.paths[shoppingList.path.at].path.slice(-1)[0]].items.map(item => item.barcode).some(barcode => barcode == barcodeInput)
 	) {
 		shoppingList.path.at++;
+		let item = shoppingList.path.paths[shoppingList.path.at].item;
+		if (item !== null) {
+			nextItemP.textContent = item.name;
+		} else {
+			nextItemP.textContent = "";
+			nextItemHeading.textContent = "Du är klar! Gå till kassan och betala.";
+		}
 		barcodeInput = "";
 	}
 
@@ -669,6 +679,8 @@ function activeRouteKeyDown(event) {
 startRouteBtn.addEventListener("click", () => {
 	try {
 		shoppingList.getFastestPathInStore(store);
+		nextItemP.textContent = shoppingList.path.paths[0].item.name;
+		nextItem.style.display = "block";
 	}
 	catch (e) {
 		alert(e);
