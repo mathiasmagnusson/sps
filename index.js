@@ -8,6 +8,7 @@ const nameOfItem = {
 	"769": "Bra betyg",
 	"7342849038949": "Kattmat",
 	"5000112579758": "Coca Cola",
+	"5060214370028": "Raspberry PI",
 };
 
 class Item {
